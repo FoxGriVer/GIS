@@ -1,0 +1,103 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Drawing;
+
+namespace MiniGIS
+{
+    public partial class Form : System.Windows.Forms.Form
+    {       
+        public Form()
+        {
+            InitializeComponent();
+
+            Line OX = new Line();
+            OX.BeginPoint = new GEOPoint(-this.Width / 2, 0);
+            OX.EndPoint = new GEOPoint(this.Width / 2, 0);
+
+            Line OY = new Line();
+            OY.BeginPoint = new GEOPoint(0, this.Height / 2);
+            OY.EndPoint = new GEOPoint(0, -this.Height / 2);
+
+            var pointX = new Point();
+            pointX.Style = new PointStyle("Arial", Convert.ToByte('X'), 14, System.Drawing.Color.Black);
+            pointX.Position = new GEOPoint(this.Width / 2 - 40, pointX.Style.SymbolSize);
+
+            var pointY = new Point();
+            pointY.Style = new PointStyle("Arial", Convert.ToByte('Y'), 14, System.Drawing.Color.Black);
+            pointY.Position = new GEOPoint(pointX.Style.SymbolSize, this.Height / 2 - 50);
+
+            //var polyLine = new PolyLine();
+            //polyLine.AddNode(new GEOPoint(0, 0));
+            //polyLine.AddNode(new GEOPoint(-50, -50));
+            //polyLine.AddNode(new GEOPoint(-180, -250));
+            //polyLine.AddNode(new GEOPoint(180, 100));
+
+            //var polygon = new Polygon();
+            //polygon.AddNode(new GEOPoint(45, 75));
+            //polygon.AddNode(new GEOPoint(85, -50));
+            //polygon.AddNode(new GEOPoint(100, 0));
+            //polygon.AddNode(new GEOPoint(-75, 50));
+
+            var layer1 = new Layer();
+            layer1.AddMapObject(OX);
+            layer1.AddMapObject(OY);
+            layer1.AddMapObject(pointX);
+            layer1.AddMapObject(pointY);
+            //layer1.AddMapObject(polyLine);
+            //layer1.AddMapObject(polygon);
+            mapControl.AddLayer(layer1);
+        }
+
+        private void selectBtn_Click(object sender, EventArgs e)
+        {
+            mapControl.mapToolType = MapToolType.selectBtn;
+            selectBtn.Checked = true;
+
+            panBtn.Checked = false;
+            zoomInBtn.Checked = false;
+            zoomOutBtn.Checked = false;         
+        }
+
+        private void Form_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panBtn_Click(object sender, EventArgs e)
+        {
+            mapControl.mapToolType = MapToolType.panBtn;
+            panBtn.Checked = true;
+            selectBtn.Checked = false;
+            zoomInBtn.Checked = false;
+            zoomOutBtn.Checked = false;
+        }
+
+        private void zoomInBtn_Click(object sender, EventArgs e)
+        {
+            mapControl.mapToolType = MapToolType.zoominBtn;
+            zoomInBtn.Checked = true;
+            panBtn.Checked = false;
+            selectBtn.Checked = false;
+            zoomOutBtn.Checked = false;
+        }
+
+        private void zoomOutBtn_Click(object sender, EventArgs e)
+        {
+            mapControl.mapToolType = MapToolType.zoomoutBtn;
+            zoomOutBtn.Checked = true;
+            panBtn.Checked = false;
+            zoomInBtn.Checked = false;
+            selectBtn.Checked = false;
+        }       
+        
+    }
+}
+
+//Select(Выбор), Pan(Ладошка), Zoom In(приближение) Zoom Out(Отдаление), Entire view(Показать целиком) - перечиление
+//При выборе перечисление попадает в поле формы
